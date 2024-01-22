@@ -1,11 +1,11 @@
-import React from 'react'
-import '../CSS/DoctorSignin.css'
+import React from "react";
+import "../CSS/DoctorSignin.css";
 //import healthif from "../Images/healthif.png";
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Web3, { net } from "web3";
 import { useState, useEffect } from "react";
-import healthify from "../contracts/healthify.json";
+import healthIQ from "../contracts/healthIQ.json";
 
 export default function DoctorSignin() {
   const navigate = useNavigate();
@@ -80,10 +80,10 @@ export default function DoctorSignin() {
       const web3 = new Web3(provider);
       // console.log(web3);
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = healthify.networks[networkId];
+      const deployedNetwork = healthIQ.networks[networkId];
       // console.log(deployedNetwork.address);
       const contract = new web3.eth.Contract(
-        healthify.abi,
+        healthIQ.abi,
         deployedNetwork.address
       );
       // console.log(contract);//instance of contract
@@ -105,8 +105,8 @@ export default function DoctorSignin() {
                       <div className="text-center">
                         {/* <img className="im" src={healthif} alt="logo" /> */}
                         <p className="ft-title">
-              Health <span className="ft-sign">IQ</span>
-            </p>
+                          Health <span className="ft-sign">IQ</span>
+                        </p>
                       </div>
                       <form>
                         <p>Please login to your Doctor account</p>

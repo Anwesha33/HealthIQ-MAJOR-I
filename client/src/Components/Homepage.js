@@ -1,13 +1,13 @@
-import React from 'react'
-import '../CSS/Homepage.css'
-import {Link} from 'react-router-dom'
+import React from "react";
+import "../CSS/Homepage.css";
+import { Link } from "react-router-dom";
 
 export default function Homepage() {
   return (
     <>
-      <div className='main'>
+      <div className="main">
         <div className="container top">
-          <h1 className="heading">About Healthify</h1>
+          <h1 className="heading">About healthIQ</h1>
           <p className="psize">
             A healthcare data portal storing website that utilizes blockchain
             technology is a platform designed to securely store and manage

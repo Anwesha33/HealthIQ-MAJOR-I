@@ -6,7 +6,7 @@ export default function Footer() {
       <footer class=" bottom page-footer font-small blue">
         <div class="footer-copyright text-center py-3">
           © 2023 Copyright:
-          <text> Healthify</text>
+          <text> healthIQ</text>
         </div>
       </footer>
     </>

@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 import Web3, { net } from "web3";
 import { useState, useEffect } from "react";
-import healthify from "../contracts/healthify.json";
+import healthIQ from "../contracts/healthIQ.json";
 
 export default function PatientAccessRecord() {
   const location = useLocation();
@@ -62,10 +62,10 @@ export default function PatientAccessRecord() {
       const web3 = new Web3(provider);
       // console.log(web3);
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = healthify.networks[networkId];
+      const deployedNetwork = healthIQ.networks[networkId];
       // console.log(deployedNetwork.address);
       const contract = new web3.eth.Contract(
-        healthify.abi,
+        healthIQ.abi,
         deployedNetwork.address
       );
       // console.log(contract);//instance of contract
@@ -74,84 +74,85 @@ export default function PatientAccessRecord() {
     provider && template();
     connect();
   }, []);
-    useEffect(() => {
-        FetchDetails();
-    }, [ctr]);
+  useEffect(() => {
+    FetchDetails();
+  }, [ctr]);
 
-    function getPrevious() {
-      if (ind > 0) {
-        setInd(ind - 1);
+  function getPrevious() {
+    if (ind > 0) {
+      setInd(ind - 1);
+    }
+  }
+  function getNext() {
+    if (ind < nrecords - 1) {
+      setInd(ind + 1);
+    }
+  }
+  async function FetchDetails() {
+    const { contract } = state;
+    try {
+      const data = await contract.methods
+        .viewPatients(patid)
+        .call({ from: currentAccount });
+      console.log("pat details", data);
+      setName(data[0]);
+      setContact(data[1].toString());
+      // alert("Details Fetched");
+    } catch (e) {
+      console.error(e);
+      console.log("Inavlid Credentials");
+      // alert("Fetch Details Failed");
+    }
+    try {
+      const record = await contract.methods
+        .doctorViewDetails(patid)
+        .call({ from: currentAccount });
+      console.log("patient record details", record);
+      setNrecords(record.length);
+      for (let i = 0; i < record.length; i++) {
+        ageArray.push(record[i].age);
+        weightArray.push(record[i].weight);
+        heightArray.push(record[i].height);
+        bloodPressureArray.push(record[i].bp);
+        heartRateArray.push(record[i].heartrate);
+        temperatureArray.push(record[i].temp);
+        dateArray.push(record[i].date);
+        prescriptionArray.push(record[i].prescription);
+        cidhashArray.push(record[i].report);
+        if (cidhashArray[i] === "") {
+          linkArray.push("no_report");
+        } else {
+          linkArray.push(llink + cidhashArray[i] + rlink);
+        }
       }
-    }
-    function getNext() {
-      if (ind < nrecords - 1) {
-        setInd(ind + 1);
-      }
-    }
-    async function FetchDetails() {
-        const { contract } = state;
-        try {
-            const data = await contract.methods.viewPatients(patid).call({ from: currentAccount });
-            console.log("pat details",data);
-            setName(data[0]);
-            setContact(data[1].toString());
-            // alert("Details Fetched");
-        } catch (e) {
-            console.error(e);
-            console.log("Inavlid Credentials");
-            // alert("Fetch Details Failed");
-        }
-        try{
-          const record = await contract.methods
-            .doctorViewDetails(patid)
-            .call({ from:currentAccount });
-          console.log("patient record details", record);
-          setNrecords(record.length);
-          for (let i = 0; i < record.length; i++) {
-            ageArray.push(record[i].age);
-            weightArray.push(record[i].weight);
-            heightArray.push(record[i].height);
-            bloodPressureArray.push(record[i].bp);
-            heartRateArray.push(record[i].heartrate);
-            temperatureArray.push(record[i].temp);
-            dateArray.push(record[i].date);
-            prescriptionArray.push(record[i].prescription);
-            cidhashArray.push(record[i].report);
-            if (cidhashArray[i] === "") {
-              linkArray.push("no_report");
-            } else {
-              linkArray.push(llink + cidhashArray[i] + rlink);
-            }
-          }
-          setPid(patid);
-          setBloodPressure(bloodPressureArray);
-          setHeartRate(heartRateArray);
-          setTemperature(temperatureArray);
-          setDate(dateArray);
-          setPrescription(prescriptionArray);
-          setCidhash(cidhashArray);
-          setLink(linkArray);
-          const intWeightArray = weightArray.map((bigint) => Number(bigint));
-          setWeight(intWeightArray);
-          // console.log("wt arr",intWeightArray);
+      setPid(patid);
+      setBloodPressure(bloodPressureArray);
+      setHeartRate(heartRateArray);
+      setTemperature(temperatureArray);
+      setDate(dateArray);
+      setPrescription(prescriptionArray);
+      setCidhash(cidhashArray);
+      setLink(linkArray);
+      const intWeightArray = weightArray.map((bigint) => Number(bigint));
+      setWeight(intWeightArray);
+      // console.log("wt arr",intWeightArray);
 
-          const intAgeArray = ageArray.map((bigint) => Number(bigint));
-          setAge(intAgeArray);
-          // console.log("age arr",intAgeArray);
+      const intAgeArray = ageArray.map((bigint) => Number(bigint));
+      setAge(intAgeArray);
+      // console.log("age arr",intAgeArray);
 
-          const intHeightArray = heightArray.map((bigint) => Number(bigint));
-          setHeight(intHeightArray);
-          // console.log("height arr",intHeightArray);
+      const intHeightArray = heightArray.map((bigint) => Number(bigint));
+      setHeight(intHeightArray);
+      // console.log("height arr",intHeightArray);
 
-          const intTempArray = temperatureArray.map((bigint) => Number(bigint));
-          setTemperature(intTempArray);
-          // console.log("temp arr",intTempArray);
-          console.log("link", link);
-        }
-        catch(e){
-            console.log(e);
-        }
+      const intTempArray = temperatureArray.map((bigint) => Number(bigint));
+      setTemperature(intTempArray);
+      // console.log("temp arr",intTempArray);
+      console.log("link", link);
+    } catch (e) {
+      console.log(e);
     }
+  }
   return (
     <>
       <div className="first-ctr">
@@ -240,27 +241,31 @@ export default function PatientAccessRecord() {
               </span>
             </div>
           </div>
-           <div className="next-prevctr">
-          <div id="prevbtn" className="prevbtndiv npbtn">
-            <button
-              className="prevbtn npbtntext patidsubbtn" onClick={getPrevious}
-            >
-              Prev
-            </button>
+          <div className="next-prevctr">
+            <div id="prevbtn" className="prevbtndiv npbtn">
+              <button
+                className="prevbtn npbtntext patidsubbtn"
+                onClick={getPrevious}
+              >
+                Prev
+              </button>
+            </div>
+            <div id="nextbtn" className="nextbtndiv npbtn">
+              <button
+                className="nextbtn npbtntext patidsubbtn"
+                onClick={getNext}
+              >
+                Next
+              </button>
+            </div>
           </div>
-          <div id="nextbtn" className="nextbtndiv npbtn">
-            <button className="nextbtn npbtntext patidsubbtn" onClick={getNext} >
-              Next
-            </button>
+          <div className="sequence">
+            <label className="sequence-number">
+              {ind + 1}/{nrecords}
+            </label>
           </div>
-        </div>
-        <div className="sequence">
-          <label className="sequence-number">
-            {ind + 1}/{nrecords}
-          </label>
         </div>
       </div>
-        </div>
     </>
   );
 }

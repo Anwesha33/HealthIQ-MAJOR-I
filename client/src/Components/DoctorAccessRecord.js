@@ -2,7 +2,7 @@ import React from "react";
 import "../CSS/DoctorAccessRecord.css";
 import Web3, { net } from "web3";
 import { useState, useEffect } from "react";
-import healthify from "../contracts/healthify.json";
+import healthIQ from "../contracts/healthIQ.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export default function AccessRecord() {
@@ -228,10 +228,10 @@ export default function AccessRecord() {
       const web3 = new Web3(provider);
       // console.log(web3);
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = healthify.networks[networkId];
+      const deployedNetwork = healthIQ.networks[networkId];
       // console.log(deployedNetwork.address);
       const contract = new web3.eth.Contract(
-        healthify.abi,
+        healthIQ.abi,
         deployedNetwork.address
       );
       // console.log(contract);//instance of contract

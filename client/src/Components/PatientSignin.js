@@ -1,36 +1,36 @@
-import React from 'react'
+import React from "react";
 //import healthif from '../Images/healthif.png'
-import '../CSS/PatientSignin.css'
-import { Link } from 'react-router-dom'
+import "../CSS/PatientSignin.css";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Web3, { net } from "web3";
 import { useState, useEffect } from "react";
-import healthify from "../contracts/healthify.json";
+import healthIQ from "../contracts/healthIQ.json";
 
 export default function PatientSignin() {
-   const navigate = useNavigate();
-   const [state, setState] = useState({ web3: null, contract: null });
-   const [patid, setPatid] = useState("");
-   const [password, setPassword] = useState("");
-   const [currentAccount, setCurrentAccount] = useState("");
-   const connect = async () => {
-     try {
-       const { web3 } = state;
-       const accounts = await window.ethereum.request({
-         method: "eth_requestAccounts",
-       });
-       setCurrentAccount(accounts[0]);
-       console.log("Connected metamask", accounts[0]);
-       // toast.success("Connected to Metamask");
-     } catch (e) {
-       console.log(e);
-       // toast.error("Error connecting to Metamask");
-     }
-   };
-   async function Submitted() {
-     //patientSignin to blockchain
-     console.log(`Patid: ${patid}, Password: ${password}`);
-     const { contract } = state;
+  const navigate = useNavigate();
+  const [state, setState] = useState({ web3: null, contract: null });
+  const [patid, setPatid] = useState("");
+  const [password, setPassword] = useState("");
+  const [currentAccount, setCurrentAccount] = useState("");
+  const connect = async () => {
+    try {
+      const { web3 } = state;
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setCurrentAccount(accounts[0]);
+      console.log("Connected metamask", accounts[0]);
+      // toast.success("Connected to Metamask");
+    } catch (e) {
+      console.log(e);
+      // toast.error("Error connecting to Metamask");
+    }
+  };
+  async function Submitted() {
+    //patientSignin to blockchain
+    console.log(`Patid: ${patid}, Password: ${password}`);
+    const { contract } = state;
     //  try {
     //    const data = await contract.methods
     //      .patientSignIn(patid, password)
@@ -44,9 +44,11 @@ export default function PatientSignin() {
     //    document.getElementById("username").value = "";
     //    document.getElementById("password").value = "";
     //  }
-    try{
+    try {
       const transaction = contract.methods.patientSignIn(patid, password);
-      const gasEstimate = await transaction.estimateGas({ from: currentAccount });
+      const gasEstimate = await transaction.estimateGas({
+        from: currentAccount,
+      });
       const confirmed = await window.ethereum.send("eth_sendTransaction", [
         {
           to: contract.options.address, // The contract address
@@ -55,7 +57,7 @@ export default function PatientSignin() {
           from: currentAccount, // The user's account
         },
       ]);
-       if (confirmed) {
+      if (confirmed) {
         // Transaction confirmed by user, call the method
         const data = await transaction.call({ from: currentAccount });
         console.log(data);
@@ -71,24 +73,24 @@ export default function PatientSignin() {
       document.getElementById("password").value = "";
     }
   }
-   useEffect(() => {
-     const provider = new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545");
-     async function template() {
-       const web3 = new Web3(provider);
-       // console.log(web3);
-       const networkId = await web3.eth.net.getId();
-       const deployedNetwork = healthify.networks[networkId];
-       // console.log(deployedNetwork.address);
-       const contract = new web3.eth.Contract(
-         healthify.abi,
-         deployedNetwork.address
-       );
-       // console.log(contract);//instance of contract
-       setState({ web3: web3, contract: contract });
-     }
-     provider && template();
-     connect();
-   }, []);
+  useEffect(() => {
+    const provider = new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545");
+    async function template() {
+      const web3 = new Web3(provider);
+      // console.log(web3);
+      const networkId = await web3.eth.net.getId();
+      const deployedNetwork = healthIQ.networks[networkId];
+      // console.log(deployedNetwork.address);
+      const contract = new web3.eth.Contract(
+        healthIQ.abi,
+        deployedNetwork.address
+      );
+      // console.log(contract);//instance of contract
+      setState({ web3: web3, contract: contract });
+    }
+    provider && template();
+    connect();
+  }, []);
   return (
     <>
       <section className="h-100 gradient-form sec">
@@ -102,8 +104,8 @@ export default function PatientSignin() {
                       <div className="text-center">
                         {/* <img className="im" src={healthif} alt="logo" /> */}
                         <p className="ft-title">
-              Health <span className="ft-sign">IQ</span>
-            </p>
+                          Health <span className="ft-sign">IQ</span>
+                        </p>
                       </div>
 
                       <form>

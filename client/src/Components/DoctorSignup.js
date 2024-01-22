@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Web3, { net } from "web3";
 import { useState, useEffect } from "react";
-import healthify from "../contracts/healthify.json";
+import healthIQ from "../contracts/healthIQ.json";
 import { ethers } from "ethers";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,7 +19,7 @@ export default function DoctorSignup() {
   const [password, setPassword] = useState("");
   const [cpassword, setCpassword] = useState("");
   const [currentAccount, setCurrentAccount] = useState("");
-  
+
   //For connecting to metamask wallet through account using button
   const connect = async () => {
     try {
@@ -46,7 +46,6 @@ export default function DoctorSignup() {
     );
     const { contract } = state;
     try {
-
       // await contract.methods.doctorSignUp(name, contact, docid, password).send({
       //   from: "0xf5f59DA65F790bC66FA3B4caB20ef3DD9c051dec",
       //   // from:currentAccount,
@@ -81,10 +80,10 @@ export default function DoctorSignup() {
       console.log("ID already exists");
       alert("ID already exists");
     }
-      // console.log("curr",currentAccount);
-      // console.log("Submitted to blockchain");
-      // alert("Account Created Successfully");
-      // navigate("/doctorsignin");
+    // console.log("curr",currentAccount);
+    // console.log("Submitted to blockchain");
+    // alert("Account Created Successfully");
+    // navigate("/doctorsignin");
     // } catch (e) {
     //   console.error(e);
     //   console.log("ID already exists");
@@ -97,10 +96,10 @@ export default function DoctorSignup() {
       const web3 = new Web3(provider);
       // console.log(web3);
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = healthify.networks[networkId];
+      const deployedNetwork = healthIQ.networks[networkId];
       // console.log(deployedNetwork.address);
       const contract = new web3.eth.Contract(
-        healthify.abi,
+        healthIQ.abi,
         deployedNetwork.address
       );
       // console.log(contract);//instance of contract
@@ -122,8 +121,8 @@ export default function DoctorSignup() {
                       <div className="text-center">
                         {/* <img className="im" src={healthif} alt="logo" /> */}
                         <p className="ft-title">
-              Health <span className="ft-sign">IQ</span>
-            </p>
+                          Health <span className="ft-sign">IQ</span>
+                        </p>
                       </div>
                       <form>
                         <p>Please setup your Doctor account</p>
